@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import json
 import os
 import requests
-
+ 
 # ── Page Config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="EcoTrack – Carbon Footprint Platform",
@@ -14,7 +14,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
+ 
 # ── Custom CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
@@ -27,7 +27,7 @@ st.markdown("""
         background: #0d1117 !important;
         padding-top: 2rem;
     }
-
+ 
     /* ── Sidebar ── */
     section[data-testid="stSidebar"] {
         background: #161b22 !important;
@@ -36,13 +36,13 @@ st.markdown("""
     section[data-testid="stSidebar"] * {
         color: #e6edf3 !important;
     }
-
+ 
     /* ── All text ── */
     p, span, label, div, li { color: #e6edf3 !important; }
     h1 { color: #39d353 !important; font-size: 2.2em !important; }
     h2 { color: #39d353 !important; }
     h3 { color: #7ee787 !important; }
-
+ 
     /* ── Metric cards ── */
     .metric-card {
         background: #161b22;
@@ -56,7 +56,7 @@ st.markdown("""
     .metric-card h2, .metric-card h3, .metric-card p {
         color: #e6edf3 !important;
     }
-
+ 
     /* ── Tip cards ── */
     .tip-card {
         background: #1c2128;
@@ -67,7 +67,7 @@ st.markdown("""
         border: 1px solid #30363d;
     }
     .tip-card p { color: #c9d1d9 !important; }
-
+ 
     /* ── AI response card ── */
     .ai-response {
         background: #1c2128;
@@ -79,7 +79,7 @@ st.markdown("""
     }
     .ai-response h3 { color: #58a6ff !important; }
     .ai-response p { color: #c9d1d9 !important; }
-
+ 
     /* ── Buttons ── */
     .stButton > button {
         background: linear-gradient(135deg, #238636, #2ea043) !important;
@@ -94,7 +94,7 @@ st.markdown("""
         transform: translateY(-1px);
         box-shadow: 0 4px 15px rgba(57, 211, 83, 0.3) !important;
     }
-
+ 
     /* ── Input fields ── */
     .stTextInput > div > div > input,
     .stNumberInput > div > div > input,
@@ -104,14 +104,14 @@ st.markdown("""
         border: 1px solid #30363d !important;
         border-radius: 6px !important;
     }
-
+ 
     /* ── Selectbox dropdown ── */
     .stSelectbox [data-baseweb="select"] > div {
         background: #21262d !important;
         border-color: #30363d !important;
         color: #e6edf3 !important;
     }
-
+ 
     /* ── Metrics ── */
     [data-testid="stMetricValue"] {
         color: #39d353 !important;
@@ -120,18 +120,18 @@ st.markdown("""
     }
     [data-testid="stMetricLabel"] { color: #8b949e !important; }
     [data-testid="stMetricDelta"] { font-size: 0.85em !important; }
-
+ 
     /* ── Dataframe ── */
     .stDataFrame { border: 1px solid #30363d !important; border-radius: 8px; }
     iframe { background: #161b22 !important; }
-
+ 
     /* ── Divider ── */
     hr { border-color: #30363d !important; }
-
+ 
     /* ── Radio buttons ── */
     .stRadio label { color: #c9d1d9 !important; }
     .stRadio [data-baseweb="radio"] { accent-color: #39d353; }
-
+ 
     /* ── Expander ── */
     .streamlit-expanderHeader {
         background: #161b22 !important;
@@ -143,42 +143,52 @@ st.markdown("""
         background: #0d1117 !important;
         border: 1px solid #30363d !important;
     }
-
+ 
     /* ── Info/warning boxes ── */
     .stAlert { background: #1c2128 !important; border-radius: 8px !important; }
-
+ 
     /* ── Chat messages ── */
     [data-testid="stChatMessage"] {
         background: #161b22 !important;
         border: 1px solid #30363d !important;
         border-radius: 10px !important;
     }
-
+ 
     /* ── Spinner ── */
     .stSpinner > div { border-top-color: #39d353 !important; }
-
+ 
     /* ── Caption / small text ── */
     .stCaption, small { color: #8b949e !important; }
-
+ 
     /* ── Success message ── */
     .stSuccess { background: #1c2128 !important; border-left: 4px solid #39d353 !important; }
     .stWarning { background: #1c2128 !important; border-left: 4px solid #d29922 !important; }
     .stInfo    { background: #1c2128 !important; border-left: 4px solid #58a6ff !important; }
-
+ 
     /* ── Number input buttons ── */
     .stNumberInput button {
         background: #21262d !important;
         color: #e6edf3 !important;
         border-color: #30363d !important;
     }
-
+ 
     /* ── Date input ── */
     .stDateInput input {
         background: #21262d !important;
         color: #e6edf3 !important;
         border-color: #30363d !important;
     }
-
+ 
+    /* ── Accessibility: visible focus indicators ── */
+    button:focus, input:focus, select:focus, textarea:focus,
+    [tabindex]:focus, .stRadio label:focus-within {
+        outline: 3px solid #58a6ff !important;
+        outline-offset: 2px !important;
+    }
+ 
+    /* ── Accessibility: ensure sufficient contrast for links ── */
+    a { color: #58a6ff !important; text-decoration: underline; }
+ 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0d1117; }
@@ -186,7 +196,11 @@ st.markdown("""
     ::-webkit-scrollbar-thumb:hover { background: #39d353; }
 </style>
 """, unsafe_allow_html=True)
-
+ 
+# ── Accessibility: page language for screen readers ───────────────────────────
+st.markdown('<div lang="en" style="position:absolute; width:1px; height:1px; '
+            'overflow:hidden;" aria-hidden="true"></div>', unsafe_allow_html=True)
+ 
 # ── Session State Init ────────────────────────────────────────────────────────
 if "activities" not in st.session_state:
     st.session_state.activities = []
@@ -194,7 +208,7 @@ if "user_name" not in st.session_state:
     st.session_state.user_name = "Eco Warrior"
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
-
+ 
 # ── Emission Factors (kg CO₂e per unit) ──────────────────────────────────────
 EMISSION_FACTORS = {
     "Transport": {
@@ -235,7 +249,7 @@ EMISSION_FACTORS = {
         "Composting 1 kg":          -0.10,
     }
 }
-
+ 
 TIPS_DB = {
     "Transport": [
         "🚴 Switch to cycling or walking for trips under 5 km — saves ~1 kg CO₂ per trip.",
@@ -266,21 +280,21 @@ TIPS_DB = {
         "🌿 Compost food scraps — diverts methane from landfills.",
     ],
 }
-
+ 
 GLOBAL_AVG_KG_PER_DAY = 13.0  # ~4.7 tonnes/year global average
-
-
+ 
+ 
 # ── Helper Functions ──────────────────────────────────────────────────────────
 @st.cache_data
 def get_emission_factors():
     """Cache emission factors for efficiency."""
     return EMISSION_FACTORS
-
+ 
 @st.cache_data
 def get_tips_db():
     """Cache tips database for efficiency."""
     return TIPS_DB
-
+ 
 @st.cache_data
 def calculate_emissions(category: str, activity: str, quantity: float) -> float:
     """
@@ -298,7 +312,7 @@ def calculate_emissions(category: str, activity: str, quantity: float) -> float:
         raise ValueError("Quantity cannot be negative")
     factor = EMISSION_FACTORS.get(category, {}).get(activity, 0)
     return round(factor * quantity, 3)
-
+ 
 @st.cache_data
 def get_daily_summary(activities: tuple) -> pd.DataFrame:
     """Cache and compute daily summary from activities."""
@@ -307,7 +321,7 @@ def get_daily_summary(activities: tuple) -> pd.DataFrame:
     df = pd.DataFrame(list(activities))
     df["date"] = pd.to_datetime(df["date"])
     return df.groupby("date")["emissions"].sum().reset_index()
-
+ 
 @st.cache_data
 def get_category_summary(activities: tuple) -> pd.DataFrame:
     """Cache and compute category breakdown."""
@@ -315,7 +329,7 @@ def get_category_summary(activities: tuple) -> pd.DataFrame:
         return pd.DataFrame()
     df = pd.DataFrame(list(activities))
     return df.groupby("category")["emissions"].sum().reset_index()
-
+ 
 def get_badge(total_kg: float) -> tuple:
     """Return badge name and color based on emissions."""
     if total_kg <= 3:    return ("🌟 Eco Hero", "#39d353")
@@ -323,7 +337,7 @@ def get_badge(total_kg: float) -> tuple:
     elif total_kg <= 13: return ("🌱 Earth Aware", "#e3b341")
     elif total_kg <= 20: return ("⚡ Taking Action", "#f0883e")
     else:                return ("🔥 High Impact", "#f85149")
-
+ 
 def get_ai_suggestions(user_data_summary: str) -> str:
     """Call Claude API for personalized AI suggestions."""
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -350,7 +364,7 @@ def get_ai_suggestions(user_data_summary: str) -> str:
         return data["content"][0]["text"]
     except Exception as e:
         return f"⚠️ AI suggestions unavailable right now. Please check your API key. Error: {e}"
-
+ 
 def get_ai_chat(question: str, context: str) -> str:
     """Chat with EcoAdvisor AI."""
     api_key = os.environ.get("ANTHROPIC_API_KEY", "")
@@ -382,9 +396,9 @@ def get_ai_chat(question: str, context: str) -> str:
         return reply
     except Exception as e:
         return f"⚠️ AI chat unavailable. Error: {e}"
-
-
-
+ 
+ 
+ 
 def co2_gauge(value, max_val=30):
     fig = go.Figure(go.Indicator(
         mode="gauge+number+delta",
@@ -411,26 +425,39 @@ def co2_gauge(value, max_val=30):
                       paper_bgcolor="#0d1117", font_color="#e6edf3",
                       font=dict(color="#e6edf3"))
     return fig
-
-
+ 
+ 
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/leaf.png", width=60)
+    st.markdown(
+        '<img src="https://img.icons8.com/color/96/leaf.png" width="60" '
+        'alt="EcoTrack leaf logo" role="img" aria-label="EcoTrack application logo">',
+        unsafe_allow_html=True
+    )
     st.title("🌿 EcoTrack")
     st.caption("Carbon Footprint Awareness Platform")
     st.divider()
     
-    st.session_state.user_name = st.text_input("👤 Your Name", value=st.session_state.user_name)
+    st.session_state.user_name = st.text_input(
+        "👤 Your Name",
+        value=st.session_state.user_name,
+        help="Enter your name to personalize your dashboard. This is stored only for this session.",
+        max_chars=50
+    )
     
     st.divider()
-    page = st.radio("📌 Navigate", [
-        "🏠 Dashboard",
-        "📊 Carbon Calculator",
-        "📅 Activity Tracker",
-        "💡 Tips & Insights",
-        "🤖 AI EcoAdvisor",
-        "💬 Chat with EcoAI"
-    ])
+    page = st.radio(
+        "📌 Navigate",
+        [
+            "🏠 Dashboard",
+            "📊 Carbon Calculator",
+            "📅 Activity Tracker",
+            "💡 Tips & Insights",
+            "🤖 AI EcoAdvisor",
+            "💬 Chat with EcoAI"
+        ],
+        help="Use arrow keys or click to switch between sections of the app."
+    )
     
     st.divider()
     api_key_input = st.text_input("🔑 Anthropic API Key (for AI features)", type="password",
@@ -441,17 +468,19 @@ with st.sidebar:
     
     st.divider()
     st.markdown("**🌍 Global Stats**")
-    st.metric("Avg CO₂/person/day", "13 kg")
-    st.metric("Safe limit/day", "< 7 kg")
-
-
+    st.metric("Avg CO₂/person/day", "13 kg",
+              help="The average daily carbon footprint per person worldwide.")
+    st.metric("Safe limit/day", "< 7 kg",
+              help="A commonly cited sustainable daily emissions target per person.")
+ 
+ 
 # ── Compute totals ─────────────────────────────────────────────────────────────
 total_today = sum(a["emissions"] for a in st.session_state.activities
                   if a.get("date") == datetime.now().strftime("%Y-%m-%d"))
 total_all = sum(a["emissions"] for a in st.session_state.activities)
 badge, badge_color = get_badge(total_today)
-
-
+ 
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE: DASHBOARD
 # ══════════════════════════════════════════════════════════════════════════════
@@ -459,7 +488,7 @@ if page == "🏠 Dashboard":
     st.title(f"🌿 Welcome back, {st.session_state.user_name}!")
     st.markdown("##### Your personal carbon footprint dashboard — track, learn, and reduce.")
     st.divider()
-
+ 
     # KPI Row
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -477,7 +506,7 @@ if page == "🏠 Dashboard":
         equiv_trees = round(total_all / 21.77, 1)
         st.metric("🌳 Trees Needed", f"{equiv_trees}",
                   "to offset your emissions")
-
+ 
     st.divider()
     col_g, col_b = st.columns([2, 1])
     with col_g:
@@ -493,7 +522,7 @@ if page == "🏠 Dashboard":
             <p style="color:#e6edf3;">📈 Your today: <b>{total_today:.2f} kg</b></p>
         </div>
         """, unsafe_allow_html=True)
-
+ 
     # Recent Activities
     if st.session_state.activities:
         st.subheader("📋 Recent Activities")
@@ -503,8 +532,8 @@ if page == "🏠 Dashboard":
         st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.info("👆 Start by logging activities in the **Carbon Calculator** or **Activity Tracker** tab!")
-
-
+ 
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE: CARBON CALCULATOR
 # ══════════════════════════════════════════════════════════════════════════════
@@ -512,11 +541,19 @@ elif page == "📊 Carbon Calculator":
     st.title("📊 Carbon Footprint Calculator")
     st.markdown("Calculate the CO₂ emissions from your daily activities.")
     st.divider()
-
+ 
     col1, col2 = st.columns([1, 1])
     with col1:
-        category = st.selectbox("🗂️ Category", list(EMISSION_FACTORS.keys()))
-        activity = st.selectbox("⚡ Activity", list(EMISSION_FACTORS[category].keys()))
+        category = st.selectbox(
+            "🗂️ Category",
+            list(EMISSION_FACTORS.keys()),
+            help="Choose the category of activity you want to calculate emissions for."
+        )
+        activity = st.selectbox(
+            "⚡ Activity",
+            list(EMISSION_FACTORS[category].keys()),
+            help="Select the specific activity within this category."
+        )
         
         factor = EMISSION_FACTORS[category][activity]
         unit_map = {
@@ -524,20 +561,29 @@ elif page == "📊 Carbon Calculator":
             "Home Energy": "units (kWh/kg)", "Shopping & Waste": "items/kg"
         }
         unit = unit_map.get(category, "units")
-        quantity = st.number_input(f"📏 Quantity ({unit})", min_value=0.0, value=1.0, step=0.5)
-        date_sel = st.date_input("📅 Date", value=datetime.now())
+        quantity = st.number_input(
+            f"📏 Quantity ({unit})",
+            min_value=0.0, value=1.0, step=0.5,
+            help=f"Enter the amount in {unit}. Must be zero or positive."
+        )
+        date_sel = st.date_input(
+            "📅 Date",
+            value=datetime.now(),
+            help="Select the date this activity occurred."
+        )
         
         emissions = calculate_emissions(category, activity, quantity)
         
         st.markdown(f"""
-        <div class="metric-card">
+        <div class="metric-card" role="status" aria-live="polite" aria-label="Estimated carbon emissions result">
             <h3>🌡️ Estimated Emissions</h3>
-            <h2 style="color:#2e7d32; font-size:2.5em;">{emissions:.3f} <span style="font-size:0.5em;">kg CO₂e</span></h2>
+            <h2 style="color:#39d353; font-size:2.5em;">{emissions:.3f} <span style="font-size:0.5em;">kg CO₂e</span></h2>
             <p>📊 Emission factor: {factor} kg CO₂e per {unit}</p>
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("➕ Log This Activity", use_container_width=True):
+        if st.button("➕ Log This Activity", use_container_width=True,
+                     help="Save this activity to your tracker for today's and historical totals."):
             st.session_state.activities.append({
                 "date": date_sel.strftime("%Y-%m-%d"),
                 "category": category,
@@ -548,7 +594,7 @@ elif page == "📊 Carbon Calculator":
             })
             st.success(f"✅ Logged {emissions:.3f} kg CO₂ for {activity}!")
             st.balloons()
-
+ 
     with col2:
         st.subheader("⚖️ Compare Activities")
         if category in EMISSION_FACTORS:
@@ -566,8 +612,8 @@ elif page == "📊 Carbon Calculator":
                              coloraxis_showscale=False)
             fig.update_xaxes(showgrid=True, gridcolor="#e8f5e9")
             st.plotly_chart(fig, use_container_width=True)
-
-
+ 
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE: ACTIVITY TRACKER
 # ══════════════════════════════════════════════════════════════════════════════
@@ -575,13 +621,13 @@ elif page == "📅 Activity Tracker":
     st.title("📅 Daily Activity Tracker")
     st.markdown("Track your carbon footprint over time and spot trends.")
     st.divider()
-
+ 
     if not st.session_state.activities:
         st.info("No activities logged yet. Use the **Carbon Calculator** to add activities!")
     else:
         df = pd.DataFrame(st.session_state.activities)
         df["date"] = pd.to_datetime(df["date"])
-
+ 
         # Daily trend chart
         daily = df.groupby("date")["emissions"].sum().reset_index()
         daily.columns = ["Date", "Total CO₂ (kg)"]
@@ -597,7 +643,7 @@ elif page == "📅 Activity Tracker":
         fig_trend.update_layout(paper_bgcolor="#0d1117",
                                plot_bgcolor="rgba(245,255,245,0.5)")
         st.plotly_chart(fig_trend, use_container_width=True)
-
+ 
         col1, col2 = st.columns(2)
         with col1:
             # Category breakdown pie
@@ -607,7 +653,7 @@ elif page == "📅 Activity Tracker":
                             color_discrete_sequence=px.colors.sequential.Greens_r)
             fig_pie.update_layout(paper_bgcolor="#0d1117")
             st.plotly_chart(fig_pie, use_container_width=True)
-
+ 
         with col2:
             # Top emitting activities
             top_acts = df.groupby("activity")["emissions"].sum().nlargest(8).reset_index()
@@ -619,34 +665,44 @@ elif page == "📅 Activity Tracker":
                                  plot_bgcolor="rgba(0,0,0,0)",
                                  coloraxis_showscale=False)
             st.plotly_chart(fig_top, use_container_width=True)
-
+ 
         # Full log table
         st.subheader("📋 Activity Log")
         col_a, col_b, col_c = st.columns(3)
         with col_a:
             cats = ["All"] + list(df["category"].unique())
-            filter_cat = st.selectbox("Filter by Category", cats)
+            filter_cat = st.selectbox(
+                "Filter by Category", cats,
+                help="Show only activities from a specific category, or All to see everything."
+            )
         with col_b:
-            date_from = st.date_input("From", value=df["date"].min())
+            date_from = st.date_input(
+                "From", value=df["date"].min(),
+                help="Start date for filtering the activity log."
+            )
         with col_c:
-            date_to = st.date_input("To", value=df["date"].max())
-
+            date_to = st.date_input(
+                "To", value=df["date"].max(),
+                help="End date for filtering the activity log."
+            )
+ 
         filtered = df.copy()
         if filter_cat != "All":
             filtered = filtered[filtered["category"] == filter_cat]
         filtered = filtered[(filtered["date"] >= pd.Timestamp(date_from)) &
                            (filtered["date"] <= pd.Timestamp(date_to))]
-
+ 
         display_df = filtered[["date","category","activity","quantity","unit","emissions"]].copy()
         display_df.columns = ["Date","Category","Activity","Quantity","Unit","CO₂ (kg)"]
         display_df["Date"] = display_df["Date"].dt.strftime("%Y-%m-%d")
         st.dataframe(display_df, use_container_width=True, hide_index=True)
-
-        if st.button("🗑️ Clear All Activities", type="secondary"):
+ 
+        if st.button("🗑️ Clear All Activities", type="secondary",
+                     help="Warning: this permanently deletes all logged activities for this session."):
             st.session_state.activities = []
             st.rerun()
-
-
+ 
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE: TIPS & INSIGHTS
 # ══════════════════════════════════════════════════════════════════════════════
@@ -654,7 +710,7 @@ elif page == "💡 Tips & Insights":
     st.title("💡 Eco Tips & Personalized Insights")
     st.markdown("Practical actions to reduce your carbon footprint.")
     st.divider()
-
+ 
     # Personalized insights from logged data
     if st.session_state.activities:
         df = pd.DataFrame(st.session_state.activities)
@@ -669,7 +725,7 @@ elif page == "💡 Tips & Insights":
         </div>
         """, unsafe_allow_html=True)
         st.divider()
-
+ 
     # Tips by category
     for cat, tips in TIPS_DB.items():
         with st.expander(f"{'🚗' if cat=='Transport' else '🍽️' if cat=='Food' else '🏠' if cat=='Home Energy' else '🛍️'} {cat} Tips", expanded=(cat=="Transport")):
@@ -679,7 +735,7 @@ elif page == "💡 Tips & Insights":
                     <p style="margin:0; font-size:0.95em;">{tip}</p>
                 </div>
                 """, unsafe_allow_html=True)
-
+ 
     st.divider()
     st.subheader("📊 Impact Comparison")
     
@@ -696,8 +752,8 @@ elif page == "💡 Tips & Insights":
                 title="🌱 Monthly CO₂ Savings by Action")
     fig.update_layout(paper_bgcolor="#0d1117", plot_bgcolor="#161b22")
     st.plotly_chart(fig, use_container_width=True)
-
-
+ 
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE: AI ECOADVISOR
 # ══════════════════════════════════════════════════════════════════════════════
@@ -705,7 +761,7 @@ elif page == "🤖 AI EcoAdvisor":
     st.title("🤖 AI EcoAdvisor")
     st.markdown("Get personalized AI-powered suggestions based on your carbon footprint data.")
     st.divider()
-
+ 
     if not os.environ.get("ANTHROPIC_API_KEY"):
         st.warning("⚠️ Please enter your Anthropic API Key in the sidebar to use AI features.")
     
@@ -731,11 +787,12 @@ elif page == "🤖 AI EcoAdvisor":
                 st.metric(cat, f"{val:.1f} kg")
         
         st.divider()
-        if st.button("🤖 Generate AI Suggestions", use_container_width=True, type="primary"):
+        if st.button("🤖 Generate AI Suggestions", use_container_width=True, type="primary",
+                     help="Send your activity summary to Claude AI for personalized eco recommendations."):
             with st.spinner("🌿 EcoAdvisor is analyzing your data..."):
                 suggestions = get_ai_suggestions(user_summary)
             st.markdown(f"""
-            <div class="ai-response">
+            <div class="ai-response" role="region" aria-live="polite" aria-label="AI generated sustainability recommendations">
                 <h3>🌟 Personalized Recommendations for {st.session_state.user_name}</h3>
                 <p>{suggestions.replace(chr(10), '<br>')}</p>
             </div>
@@ -749,8 +806,8 @@ elif page == "🤖 AI EcoAdvisor":
         - 📊 Estimate CO₂ savings from each action
         - 🏆 Help you reach your carbon goals
         """)
-
-
+ 
+ 
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE: AI CHAT
 # ══════════════════════════════════════════════════════════════════════════════
@@ -758,10 +815,10 @@ elif page == "💬 Chat with EcoAI":
     st.title("💬 Chat with EcoAdvisor")
     st.markdown("Ask anything about carbon footprint, sustainability, and eco-living!")
     st.divider()
-
+ 
     if not os.environ.get("ANTHROPIC_API_KEY"):
         st.warning("⚠️ Please enter your Anthropic API Key in the sidebar to use AI chat.")
-
+ 
     # Display chat history
     for msg in st.session_state.chat_history:
         if msg["role"] == "user":
@@ -770,7 +827,7 @@ elif page == "💬 Chat with EcoAI":
         else:
             with st.chat_message("assistant", avatar="🌿"):
                 st.write(msg["content"])
-
+ 
     # Quick question buttons
     if not st.session_state.chat_history:
         st.markdown("**💡 Quick Questions:**")
@@ -783,12 +840,13 @@ elif page == "💬 Chat with EcoAI":
         ]
         for i, q in enumerate(quick_qs):
             with q_cols[i % 2]:
-                if st.button(q, use_container_width=True):
+                if st.button(q, use_container_width=True,
+                             help="Click to ask EcoAdvisor this question."):
                     context = f"User has logged {len(st.session_state.activities)} activities, total {total_all:.1f} kg CO₂"
                     with st.spinner("🌿 EcoAdvisor is thinking..."):
                         reply = get_ai_chat(q, context)
                     st.rerun()
-
+ 
     # Chat input
     user_input = st.chat_input("Ask EcoAdvisor anything about sustainability...")
     if user_input:
@@ -796,18 +854,20 @@ elif page == "💬 Chat with EcoAI":
         with st.spinner("🌿 EcoAdvisor is thinking..."):
             reply = get_ai_chat(user_input, context)
         st.rerun()
-
+ 
     if st.session_state.chat_history:
-        if st.button("🗑️ Clear Chat", type="secondary"):
+        if st.button("🗑️ Clear Chat", type="secondary",
+                     help="Remove all messages and start a new conversation."):
             st.session_state.chat_history = []
             st.rerun()
-
-
+ 
+ 
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.divider()
 st.markdown("""
-<div style="text-align:center; color:#558b2f; font-size:0.85em;">
+<div style="text-align:center; color:#8b949e; font-size:0.85em;" role="contentinfo">
     🌿 EcoTrack – Carbon Footprint Awareness Platform | Built for Hack2Skill Challenge 3<br>
-    🌍 Together we can reduce global emissions, one action at a time.
+    🌍 Together we can reduce global emissions, one action at a time.<br>
+    <span style="font-size:0.9em;">♿ Built with accessibility in mind: keyboard navigation, descriptive labels, and screen-reader-friendly content.</span>
 </div>
 """, unsafe_allow_html=True)
