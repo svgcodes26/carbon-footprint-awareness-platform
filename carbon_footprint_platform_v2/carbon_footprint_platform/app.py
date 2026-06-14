@@ -271,9 +271,58 @@ GLOBAL_AVG_KG_PER_DAY = 13.0  # ~4.7 tonnes/year global average
 
 
 # ── Helper Functions ──────────────────────────────────────────────────────────
-def calculate_emissions(category, activity, quantity):
+@st.cache_data
+def get_emission_factors():
+    """Cache emission factors for efficiency."""
+    return EMISSION_FACTORS
+
+@st.cache_data
+def get_tips_db():
+    """Cache tips database for efficiency."""
+    return TIPS_DB
+
+@st.cache_data
+def calculate_emissions(category: str, activity: str, quantity: float) -> float:
+    """
+    Calculate CO2 emissions for a given activity.
+    
+    Args:
+        category: Activity category (Transport, Food, etc.)
+        activity: Specific activity name
+        quantity: Amount/quantity of the activity
+    
+    Returns:
+        Emissions in kg CO2e, rounded to 3 decimal places
+    """
+    if quantity < 0:
+        raise ValueError("Quantity cannot be negative")
     factor = EMISSION_FACTORS.get(category, {}).get(activity, 0)
     return round(factor * quantity, 3)
+
+@st.cache_data
+def get_daily_summary(activities: tuple) -> pd.DataFrame:
+    """Cache and compute daily summary from activities."""
+    if not activities:
+        return pd.DataFrame()
+    df = pd.DataFrame(list(activities))
+    df["date"] = pd.to_datetime(df["date"])
+    return df.groupby("date")["emissions"].sum().reset_index()
+
+@st.cache_data
+def get_category_summary(activities: tuple) -> pd.DataFrame:
+    """Cache and compute category breakdown."""
+    if not activities:
+        return pd.DataFrame()
+    df = pd.DataFrame(list(activities))
+    return df.groupby("category")["emissions"].sum().reset_index()
+
+def get_badge(total_kg: float) -> tuple:
+    """Return badge name and color based on emissions."""
+    if total_kg <= 3:    return ("🌟 Eco Hero", "#39d353")
+    elif total_kg <= 7:  return ("🌿 Green Warrior", "#7ee787")
+    elif total_kg <= 13: return ("🌱 Earth Aware", "#e3b341")
+    elif total_kg <= 20: return ("⚡ Taking Action", "#f0883e")
+    else:                return ("🔥 High Impact", "#f85149")
 
 def get_ai_suggestions(user_data_summary: str) -> str:
     """Call Claude API for personalized AI suggestions."""
@@ -334,12 +383,7 @@ def get_ai_chat(question: str, context: str) -> str:
     except Exception as e:
         return f"⚠️ AI chat unavailable. Error: {e}"
 
-def get_badge(total_kg):
-    if total_kg <= 3:    return ("🌟 Eco Hero", "#1b5e20")
-    elif total_kg <= 7:  return ("🌿 Green Warrior", "#2e7d32")
-    elif total_kg <= 13: return ("🌱 Earth Aware", "#558b2f")
-    elif total_kg <= 20: return ("⚡ Taking Action", "#f57f17")
-    else:                return ("🔥 High Impact", "#b71c1c")
+
 
 def co2_gauge(value, max_val=30):
     fig = go.Figure(go.Indicator(
